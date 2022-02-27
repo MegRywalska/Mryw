@@ -1,9 +1,6 @@
 package com.mryw.model;
 
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
@@ -11,14 +8,18 @@ import java.sql.Blob;
 import java.time.LocalDate;
 import java.util.Set;
 
+@Builder
+@Setter
 @Entity(name = "User")
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserMryw {
 
     @Id
-    private String login;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
+    private String email;
     private String password;
     private String accountName;
     private String accountURL;
