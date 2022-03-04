@@ -1,6 +1,7 @@
 package com.mryw.controller;
 
 import com.mryw.dto.UserMrywDTO;
+import com.mryw.dto.UserMrywRequestDTO;
 import com.mryw.model.UserMryw;
 import com.mryw.service.UserMrywService;
 import lombok.RequiredArgsConstructor;
@@ -15,31 +16,31 @@ public class UserMrywController {
 
     private final UserMrywService userMrywService;
 
-    @GetMapping("/list_user")
-    public List<UserMryw> getUsers() {
+    @GetMapping("")
+    public List<UserMrywDTO> getUsers() {
 
         return userMrywService.getUsersMryw();
     }
 
-    @GetMapping("/findId_user/{id}")
-    public UserMryw getUser(@PathVariable(name = "id") Long id) {
+    @GetMapping("/{id}")
+    public UserMrywDTO getUser(@PathVariable(name = "id") Long id) {
 
         return userMrywService.getUserMrywById(id);
     }
 
-    @PutMapping("/user")
-    public UserMryw putUser(@RequestBody UserMrywDTO userMrywDTO) {
+    @PutMapping("/")
+    public UserMrywDTO putUser(@RequestBody UserMrywRequestDTO userMrywDTO) {
         return userMrywService.createUserMryw(userMrywDTO);
     }
 
-    @DeleteMapping("/delete_user/{id}")
+    @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable(name = "id") Long id) {
 
         userMrywService.deleteUserMrywById(id);
     }
 
-    @PatchMapping("/update_user/{id}")
-    public UserMryw updateUser(@PathVariable(name = "id") Long id, @RequestBody UserMrywDTO updatedInformation) {
+    @PatchMapping("/{id}")
+    public UserMrywDTO updateUser(@PathVariable(name = "id") Long id, @RequestBody UserMrywRequestDTO updatedInformation) {
         return userMrywService.updateUserMrywById(id, updatedInformation);
     }
 

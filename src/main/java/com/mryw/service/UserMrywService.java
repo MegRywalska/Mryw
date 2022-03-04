@@ -2,6 +2,7 @@ package com.mryw.service;
 
 
 import com.mryw.dto.UserMrywDTO;
+import com.mryw.dto.UserMrywRequestDTO;
 import com.mryw.model.StatusAccount;
 import com.mryw.model.UserMryw;
 import com.mryw.repository.UserMrywRepository;
@@ -12,6 +13,7 @@ import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,16 +21,19 @@ public class UserMrywService {
 
     private final UserMrywRepository userMrywRepository;
 
-    public UserMryw getUserMrywById(Long id){
-        return userMrywRepository.getById(id);
+    public UserMrywDTO getUserMrywById(Long id){
+        return UserMrywDTO.fromUserMryw(userMrywRepository.getById(id));
     }
 
-    public List<UserMryw>  getUsersMryw(){
-        return userMrywRepository.findAll();
+    public List<UserMrywDTO>  getUsersMryw(){
+        return userMrywRepository.findAll()
+                .stream()
+                .map(UserMrywDTO::fromUserMryw)
+                .collect(Collectors.toList());
     }
 
-    public UserMryw createUserMryw(UserMrywDTO createRequest) {
-        UserMryw userMryw = UserMryw.builder()
+    public UserMrywDTO createUserMryw(UserMrywRequestDTO createRequest) {
+         UserMryw userMryw =  UserMryw.builder()
                 .email(createRequest.getEmail())
                 .accountName(createRequest.getAccountName())
                 .accountURL(createRequest.getAccountURL())
@@ -37,14 +42,14 @@ public class UserMrywService {
                 .creationDate(LocalDate.now()) // opcjonalne
                 .build();
 
-        return userMrywRepository.save(userMryw);
+         return UserMrywDTO.fromUserMryw(userMrywRepository.save(userMryw));
     }
 
     public void deleteUserMrywById(Long id) {
         userMrywRepository.deleteById(id);
     }
 
-    public UserMryw updateUserMrywById(Long id, UserMrywDTO updatedInformation) {
+    public UserMrywDTO updateUserMrywById(Long id, UserMrywRequestDTO updatedInformation) {
         Optional<UserMryw> searchedUserOptional = userMrywRepository.findById(id);
         if ( searchedUserOptional.isPresent()){
             UserMryw user = searchedUserOptional.get();
@@ -54,7 +59,7 @@ public class UserMrywService {
             user.setEmail(updatedInformation.getEmail());
             user.setPassword(updatedInformation.getPassword());
 
-            return userMrywRepository.save(user);
+            return UserMrywDTO.fromUserMryw(userMrywRepository.save(user));
         }
 
         throw new EntityNotFoundException("Didn't find user with id: " + id);
