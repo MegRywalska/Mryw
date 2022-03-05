@@ -2,7 +2,6 @@ package com.mryw.controller;
 
 import com.mryw.dto.UserMrywDTO;
 import com.mryw.dto.UserMrywRequestDTO;
-import com.mryw.model.UserMryw;
 import com.mryw.service.UserMrywService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +17,6 @@ public class UserMrywController {
 
     @GetMapping("")
     public List<UserMrywDTO> getUsers() {
-
         return userMrywService.getUsersMryw();
     }
 

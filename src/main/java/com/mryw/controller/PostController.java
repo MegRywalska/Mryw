@@ -5,10 +5,12 @@ import com.mryw.dto.PostDTO;
 import com.mryw.model.Post;
 import com.mryw.service.PostService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/post")
@@ -28,6 +30,7 @@ public class PostController {
 
     @PutMapping
     public PostDTO putPost(@RequestBody PostCreateDTO postDTO){
+        log.info("Post arrived: " + postDTO);
         return postService.createPost(postDTO);
     }
 

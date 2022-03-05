@@ -5,6 +5,7 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -29,12 +30,12 @@ public class Post {
     @OneToMany()
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Comment> comments;
+    private Set<Comment> comments = new HashSet<>();
 
     @OneToMany(mappedBy = "post")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Heart> hearts;
+    private Set<Heart> hearts = new HashSet<>();
 
     @ManyToOne
     @EqualsAndHashCode.Exclude
