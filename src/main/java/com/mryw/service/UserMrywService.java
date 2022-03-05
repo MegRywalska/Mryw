@@ -8,6 +8,7 @@ import com.mryw.model.StatusAccount;
 import com.mryw.model.UserMryw;
 import com.mryw.repository.UserMrywRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -23,6 +24,7 @@ public class UserMrywService {
 
     private final UserMrywRepository userMrywRepository;
     private final UserMrywMapper userMrywMapper;
+    private final BCryptPasswordEncoder encoder;
 
     public UserMrywDTO getUserMrywById(Long id){
         return UserMrywDTO.fromUserMryw(userMrywRepository.getById(id));
@@ -37,6 +39,10 @@ public class UserMrywService {
 
     public UserMrywDTO createUserMryw(UserMrywRequestDTO createRequest) {
         UserMryw userMryw = userMrywMapper.mapUserMrywRequestDTOToUserMryw(createRequest);
+
+        // szyfrowanie hasła
+        userMryw.setPassword(encoder.encode(createRequest.getPassword()));
+
         userMryw.setStatusAccount(StatusAccount.OFFLINE);
         userMryw.setCreationDate(LocalDate.now());
         userMryw.setHearts(new HashSet<>());

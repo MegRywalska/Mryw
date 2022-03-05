@@ -2,10 +2,17 @@ package com.mryw.model;
 
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.sql.Blob;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 
 @Builder
@@ -14,7 +21,7 @@ import java.util.Set;
 @Entity(name = "User")
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserMryw {
+public class UserMryw implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -60,5 +67,33 @@ public class UserMryw {
     @ManyToMany(mappedBy = "observedUsers")
     private Set<UserMryw> observedByUser;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return new HashSet<>(Arrays.asList(new SimpleGrantedAuthority("ROLE_USER")));
+    }
 
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
 }
