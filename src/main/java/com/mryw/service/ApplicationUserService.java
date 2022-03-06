@@ -5,11 +5,13 @@ import com.mryw.repository.UserMrywRepository;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.security.Principal;
 import java.util.Optional;
 
 @Slf4j
@@ -26,5 +28,19 @@ public class ApplicationUserService implements UserDetailsService {
             return userMrywOptional.get();
         }
         throw new UsernameNotFoundException("Can't find user with email: " + email);
+    }
+
+    public Optional<Long> getLoggedInUserId(Principal principal){
+        if (principal != null){
+            log.info("Jesteśmy zalogowani, informacja o użytkowniku: " + principal);
+            UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = (UsernamePasswordAuthenticationToken) principal;
+            try{
+                UserMryw userDetails = (UserMryw) loadUserByUsername((String) usernamePasswordAuthenticationToken.getPrincipal());
+                return Optional.of(userDetails.getId());
+            }catch (UsernameNotFoundException usernameNotFoundException){
+                log.info("Nie jesteśmy zalogowani");
+            }
+        }
+        return Optional.empty();
     }
 }
